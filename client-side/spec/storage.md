@@ -44,6 +44,7 @@ Persistence SHOULD improve startup without becoming a prerequisite for evaluatio
 
 - Isolate deployments/environments and full user contexts, including same-key attribute changes.
 - Preserve each remote data set and its cursor consistently; reuse neither in isolation.
+- Preserve logical commit order when replacing the same cache entry. Once a newer snapshot is durably stored, an older asynchronous write MUST NOT replace it, even if that write finishes later. Determine order from accepted in-memory commits, not server flag versions, cursor magnitude, or wall-clock timestamps: equal-version updates may change values, and a full replacement may reduce the cursor. Validate write authority atomically with durable replacement, or serialize writes to provide equivalent behavior. If the newer snapshot was never persisted, recovery may use the last successfully stored coherent snapshot; this does not require every update to reach disk before process termination.
 - Treat corrupt, incompatible, or mismatched cache entries as unavailable and obtain fresh data.
 - Continue with in-memory data when storage access fails or capacity is exhausted.
 - Document retention, expiration, and how applications can clear stored user data.

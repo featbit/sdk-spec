@@ -18,6 +18,8 @@ iOS SDKs MUST use the shared background-pause policy. Do not expose a background
 
 Any optional background-transition event flush must be bounded by both the SDK budget and available platform execution time. If a finite background task is used, end it on completion or expiration and prevent further attempts after expiration. Never claim the task guarantees delivery or execution after force termination.
 
+The platform expiration handler MUST apply the shared transition-cutoff rules: invalidate active attempts, cancel supported requests, and retain unacknowledged work under bounded policy before ending the background task, without waiting for network completion. Late responses cannot alter newer delivery attempts or revive the expired task.
+
 On foreground return, recreate or validate transport state through fresh synchronization rather than assuming the previous connection survived suspension. Resume timers without catch-up bursts. Process termination callbacks are not a persistence or event-delivery mechanism.
 
 ## API, storage, and distribution

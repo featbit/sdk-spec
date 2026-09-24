@@ -14,7 +14,7 @@ Events support usage analytics and experimentation. Collection must remain inexp
 | Local bootstrap result | No evaluation event, even after other flags synchronize. |
 | Fallback, conversion failure, or bulk read | No evaluation event. |
 | Track | Record a named metric for the active user; numeric value defaults to 1.0. Initialization is not required. |
-| Offline, events disabled, or client closing/closed | Suppress new event collection. Offline and disabled modes also suppress delivery. |
+| Offline, events disabled, terminal event-delivery failure, or client closing/closed | Suppress new event collection. Offline, disabled, and terminal-delivery states also suppress delivery. |
 
 Capture the user, attributes, value, and timestamp at the call. Later Identify calls, input mutation, and retries MUST NOT change that event.
 
@@ -37,6 +37,16 @@ For example, two identical Track calls in one flush group produce one metric pay
 
 Send periodically and on explicit flush. Additional size-based triggers MAY be offered. Exact intervals and batch sizes are SDK choices. Invalid events must not block unrelated valid events.
 
+## Flush-group boundaries
+
+A flush group is a logical collection boundary, not an HTTP request or a retry attempt. Each accepted event belongs to exactly one group. The SDK MUST atomically seal the current group on an explicit flush, a periodic flush trigger that actually executes, an enabled size trigger, or close. Later events belong to a new group. Sealing an empty group need not retain a record. Concurrent triggers must neither duplicate events nor split ownership of an event.
+
+Sealing fixes membership and the first-occurrence deduplication result before batching. A blocked network does not prevent an explicit flush from sealing its group; sealing alone is not delivery completion. Retries preserve the sealed payloads. Queue bounds apply to open groups, sealed groups, and in-flight work together; creating groups must not bypass capacity limits.
+
+Lifecycle integrations MUST seal the open group when entering background and again before admitting foreground calls on resume. Calls collected while backgrounded belong to a separate group, unless an explicit flush or another actually executed trigger seals it sooner. If no trigger executes during the background interval, identical calls in that interval deduplicate together; document this counting consequence. Do not synthesize periodic boundaries for timer ticks missed during suspension. A transition flush uses the group sealed at background entry rather than merging it with subsequent background events.
+
+If events survive process restart, preserve group membership and deduplication state. Seal any recovered open group before accepting new events. Never merge recovered groups with each other or with new-session groups for deduplication. Physical batch packing may combine groups only if logical event multiplicity is preserved. No additional group identifier is required on the wire. See the [mobile supplement](../mobile/README.md#event-collection-and-delivery) for suspension and delivery policy.
+
 ## Delivery and failures
 
 | Outcome | Behavior |
@@ -47,6 +57,10 @@ Send periodically and on explicit flush. Additional size-based triggers MAY be o
 | Shutdown deadline reached | Stop outstanding delivery within the cleanup budget. |
 
 Use finite attempts, request deadlines, and documented retry delays. Retries preserve the original payload. A terminal delivery failure must prevent subsequent batches from starting, including batches from the same flush group.
+
+On terminal event-delivery failure, atomically stop accepting events and retry scheduling, and finalize all retained events not already acknowledged as failed/dropped. This includes open groups, sealed groups, and outstanding requests; cancel outstanding requests where supported. Make the loss observable. Late responses must not reverse finalized outcomes or restart delivery; a canceled request may still have reached the server. Existing waiting flushes settle promptly with the failure outcome rather than waiting for their timeout, unless already settled. Subsequent flushes report the terminal failure without networking or claiming delivery. Evaluation and Flag synchronization continue independently.
+
+If events are persisted, remove or durably invalidate these finalized records so a new client cannot replay them. Pending writes must not recreate replayable records after invalidation. Storage failure must be observable; if invalidation cannot be committed, report that durable cleanup is incomplete and document that a later process may recover old records. Do not claim durable erasure or exactly-once delivery in that case. A new client may accept new events but does not intentionally retry records already finalized by this policy.
 
 Delivery is best effort. Overflow, exhausted retries, application suspension, and process exit can lose events; lost responses can cause duplicate delivery. Flush-group deduplication does not guarantee exactly-once delivery.
 
