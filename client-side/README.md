@@ -25,6 +25,10 @@ Targeting rules, segments, percentage allocation, and experiment sampling remain
 
 Read the modules in this order for an overview. Requirement levels and scope are defined in [General Principles](spec/general.md). All eight modules apply together. API spelling, storage technology, scheduling, and framework integration follow each language's conventions.
 
+## Mobile supplement
+
+The [mobile supplement](mobile/README.md) adds a shared Android/iOS lifecycle and resource-use profile without replacing the core modules or wire protocol. It includes [Android requirements](mobile/android.md), [iOS requirements](mobile/ios.md), and a [mobile acceptance checklist](mobile/conformance.md). Core conformance alone does not imply conformance to this additional profile.
+
 ## Supporting references
 
 The [protocol reference](reference/protocol.md) retains the wire details needed for interoperability. The [acceptance checklist](spec/conformance.md) summarizes observable scenarios to verify. [Shared fixtures](fixtures/README.md) are planned; no executable shared fixture suite is currently included.
