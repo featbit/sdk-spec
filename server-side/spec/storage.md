@@ -18,7 +18,7 @@ Preserve server values and rule order. Flag keys and user keys are case-sensitiv
 | New entity in a patch | Insert it. |
 | Newer version in a patch | Replace the previous entity. |
 | Equal or older version in a patch | Ignore it. |
-| Archived entity | Hide it from evaluation and enumeration, retaining its version to prevent older updates from restoring it. |
+| Archived entity | Hide it from evaluation and enumeration. Only identity, version, and archived state are needed for archived entities; omit all other data from storage. |
 | Newer active version of an archived entity | Restore it. |
 
 Versions come from server update timestamps, preserving millisecond precision. They MUST NOT be replaced with local receive times. The synchronization cursor is the maximum committed entity version, including archived entities, or zero for an empty store.
