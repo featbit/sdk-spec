@@ -95,6 +95,7 @@ The response contains user-specific evaluated results:
         "timestamp": 1700000000000,
         "matchReason": "target match",
         "sendToExperiment": true,
+        "insightsEnabled": true,
         "variationOptions": [{"id": "variation-on", "value": "true"}]
       }
     ]
@@ -123,6 +124,7 @@ This is separate from WebSocket protocol ping frames. Any additional liveness po
 | `matchReason` | Server explanation. The exact value `flag archived` marks an archived result. |
 | `variationOptions` | Server variation metadata with `id` and string `value`; used to identify the selected variation for analytics. |
 | `sendToExperiment` | Server-provided experiment eligibility for this user and result. |
+| `insightsEnabled` | Optional boolean controlling evaluation event collection for this flag; defaults to `true` when absent. An explicit `false` suppresses collection. |
 
 Preserve variation identifiers without inventing or renumbering them. Match the selected string against `variationOptions[].value` for analytics. Missing or ambiguous metadata must not fabricate an assignment; omit the event while retaining a usable evaluation result. Missing experiment eligibility does not imply inclusion.
 
