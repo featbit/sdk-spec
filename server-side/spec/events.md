@@ -8,13 +8,15 @@ Events support usage analytics and experimentation. Collection must remain inexp
 
 | Operation or condition | Event behavior |
 | --- | --- |
-| Successful typed evaluation | Record one event after conversion succeeds, using the selected variation ID and original string value. |
+| Successful typed evaluation | Record one event after conversion succeeds when insights collection is enabled for the flag, using the selected variation ID and original string value. |
 | Fallback, including `WrongType` or `ClientNotReady` | Do not record an evaluation event. |
 | Bulk evaluation | Do not record evaluation events. |
 | Track | Record a named custom event; the numeric value defaults to 1.0. Initialization is not required. |
 | Offline, events disabled, or client closed | Suppress event collection and delivery. |
 
 Record the user context and timestamp as they were at the call. Later caller changes and retries must not alter them. Experiment eligibility is independent of the selected value and follows the [shared sampling rules](../reference/evaluation.md#experiment-eligibility).
+
+`insightsEnabled` controls whether this flag's evaluation events are sent and defaults to `true` when absent. When false, do not record evaluation events for this flag. This setting does not change the evaluation result or override SDK-wide event suppression.
 
 ## Efficient collection and delivery
 

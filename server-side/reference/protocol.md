@@ -88,6 +88,8 @@ Each logical JSON message MUST retain its WebSocket message boundary. Fragmented
 | Condition | `property`, `op`, and string `value`. Lists are JSON arrays encoded inside that string. |
 | Segment | `id`, `included`, `excluded`, and `rules`; each segment rule contains `conditions`. |
 
+Feature flags also carry the optional boolean `insightsEnabled`, which defaults to `true` when absent and controls [evaluation event collection](../spec/events.md#what-is-recorded).
+
 An entity's `updatedAt` is its synchronization version; it is not an evaluation-event timestamp. Preserve millisecond precision and timezone offsets during conversion. Do not replace versions with local receive times.
 
 Unknown JSON fields MUST be tolerated to allow compatible server additions. Preserve targeting and rollout array order. Null or malformed required structures MUST be handled according to [error isolation](../spec/synchronization.md#invalid-data), not silently interpreted as empty targeting rules.

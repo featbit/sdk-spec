@@ -8,7 +8,7 @@ Events support usage analytics and experimentation. Collection must remain inexp
 
 | Operation or condition | Event behavior |
 | --- | --- |
-| Successful individual evaluation of a remote result | Record after conversion succeeds, once the active context has completed online synchronization. |
+| Successful individual evaluation of a remote result | Record after conversion succeeds, once the active context has completed online synchronization, when insights collection is enabled for the flag. |
 | Matching remote cache before the active context's first successful synchronization | Return usable values, but suppress evaluation events until synchronization confirms that context. |
 | Stale remote result after successful synchronization | Remains eligible; a temporary outage does not change its origin. |
 | Local bootstrap result | No evaluation event, even after other flags synchronize. |
@@ -19,6 +19,8 @@ Events support usage analytics and experimentation. Collection must remain inexp
 Capture the user, attributes, value, and timestamp at the call. Later Identify calls, input mutation, and retries MUST NOT change that event.
 
 For evaluation events, use the server's selected variation metadata and `sendToExperiment` decision. Do not perform experiment sampling locally. If the selected variation cannot be mapped to valid analytics metadata, omit the event and report a diagnostic while preserving the evaluated value.
+
+`insightsEnabled` controls whether this flag's evaluation events are sent and defaults to `true` when absent. When false, do not record evaluation events for this flag. This setting does not change the evaluation result or override SDK-wide event suppression.
 
 Track requires a non-empty event name and a finite numeric value. Reject invalid input without affecting evaluation or synchronization.
 
