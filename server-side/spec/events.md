@@ -14,7 +14,7 @@ Events support usage analytics and experimentation. Collection must remain inexp
 | Track | Record a named custom event; the numeric value defaults to 1.0. Initialization is not required. |
 | Offline, events disabled, or client closed | Suppress event collection and delivery. |
 
-Record the user context and timestamp as they were at the call. Later caller changes and retries must not alter them. Experiment eligibility is independent of the selected value and follows the [shared sampling rules](../reference/evaluation.md#experiment-eligibility).
+Record the user context and timestamp as they were at the call. Later caller changes and retries must not alter them.
 
 `insightsEnabled` controls whether this flag's evaluation events are sent and defaults to `true` when absent. When false, do not record evaluation events for this flag. This setting does not change the evaluation result or override SDK-wide event suppression.
 

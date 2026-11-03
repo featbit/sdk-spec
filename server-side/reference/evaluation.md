@@ -80,15 +80,3 @@ These inputs are already-combined hash keys, not separate flag/user arguments:
 These vectors define the expected hash results. Conformance tests MUST additionally cover UTF-8 non-ASCII input, negative signed hashes, both interval endpoints, and the near-one shortcut.
 
 See the [.NET SDK's `DispatchAlgorithm`](https://github.com/featbit/featbit-dotnet-sdk/blob/main/src/FeatBit.ServerSdk/Evaluation/DispatchAlgorithm.cs) for a reference implementation of this algorithm.
-
-## Experiment eligibility
-
-An evaluation event's `sendToExperiment` is calculated independently from its selected flag value:
-
-- Disabled flag: always false.
-- Individual target: equal to `flag.exptIncludeAllTargets`.
-- Rule/fallthrough: true immediately when `exptIncludeAllTargets` is true. Otherwise false if that rule/fallthrough is not included in experiments.
-- For an included rule/fallthrough, let `width = rollout[1] - rollout[0]`. If `width == 0` or `exptRollout == 0`, return false. Otherwise compute `upper = min(exptRollout / width, 1)` and test interval `[0, upper]` using the same rollout algorithm with hash input `"expt" + dispatchInput`.
-
-Do not reuse the flag bucket for experiment sampling: the `expt` prefix produces a different assignment. `exptRollout` is divided by the selected variation's dispatch width; it is not used directly as a percentage threshold. Its value MUST be finite and non-negative; values larger than the width are clamped by the ratio calculation.
-

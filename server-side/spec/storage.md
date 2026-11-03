@@ -6,7 +6,7 @@ The SDK keeps the environment's flags and segments locally so evaluation can con
 
 ## Stored information
 
-Store the information needed to select variations: flag identity and state, variations, individual targets, ordered rules, default rollout, experiment settings, and referenced segments. Each entity also carries its server-provided version and archive marker.
+Store the information needed to select variations: flag identity and state, variations, individual targets, ordered rules, default rollout, and referenced segments. Each entity also carries its server-provided version and archive marker.
 
 Preserve server values and rule order. Flag keys and user keys are case-sensitive. Flag and segment identities must remain distinct; segment identifier parsing and lookup must use the same representation. Unknown fields must not break compatible updates. See the [wire data model](../reference/protocol.md#required-evaluation-data) for field names.
 

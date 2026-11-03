@@ -34,7 +34,7 @@ For segments, explicit exclusion wins over inclusion; otherwise any matching seg
 
 Percentage rollout is deterministic: the same flag, dispatch attribute, and configuration must produce the same variation in every SDK. Use the configured dispatch attribute, or the user key when none is configured. Do not substitute a different hash or normalize server percentages.
 
-Exact operator names, boundary behavior, rollout vectors, and experiment sampling rules are defined in the [evaluation compatibility reference](../reference/evaluation.md). These details are necessary to keep user assignments consistent across languages.
+Exact operator names, boundary behavior, and rollout vectors are defined in the [evaluation compatibility reference](../reference/evaluation.md). These details are necessary to keep user assignments consistent across languages.
 
 ## Values and reasons
 
