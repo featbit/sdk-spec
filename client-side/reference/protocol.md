@@ -94,7 +94,6 @@ The response contains user-specific evaluated results:
         "variationType": "boolean",
         "timestamp": 1700000000000,
         "matchReason": "target match",
-        "sendToExperiment": true,
         "insightsEnabled": true,
         "variationOptions": [{"id": "variation-on", "value": "true"}]
       }
@@ -123,12 +122,11 @@ This is separate from WebSocket protocol ping frames. Any additional liveness po
 | `timestamp` | Remote flag version in integer Unix milliseconds. Preserve precision; do not replace with receive time. |
 | `matchReason` | Server explanation. The exact value `flag archived` marks an archived result. |
 | `variationOptions` | Server variation metadata with `id` and string `value`; used to identify the selected variation for analytics. |
-| `sendToExperiment` | Server-provided experiment eligibility for this user and result. |
 | `insightsEnabled` | Optional boolean controlling evaluation event collection for this flag; defaults to `true` when absent. An explicit `false` suppresses collection. |
 
-Preserve variation identifiers without inventing or renumbering them. Match the selected string against `variationOptions[].value` for analytics. Missing or ambiguous metadata must not fabricate an assignment; omit the event while retaining a usable evaluation result. Missing experiment eligibility does not imply inclusion.
+Preserve variation identifiers without inventing or renumbering them. Match the selected string against `variationOptions[].value` for analytics. Missing or ambiguous metadata must not fabricate an assignment; omit the event while retaining a usable evaluation result.
 
-Unknown fields must not break compatible messages. Apply [invalid-data rules](../spec/synchronization.md#invalid-and-unrelated-data) to malformed required data. Missing optional analytics metadata alone need not make an otherwise usable flag unreadable. Local bootstrap is an SDK input, not a server response; it does not require remote timestamps or experiment metadata.
+Unknown fields must not break compatible messages. Apply [invalid-data rules](../spec/synchronization.md#invalid-and-unrelated-data) to malformed required data. Missing optional analytics metadata alone need not make an otherwise usable flag unreadable. Local bootstrap is an SDK input, not a server response; it does not require remote timestamps or analytics metadata.
 
 ## Polling
 
@@ -148,8 +146,7 @@ Send a JSON array to `POST <event-base>/api/public/insight/track`. An evaluation
       {
         "featureFlagKey": "checkout-v2",
         "variation": {"id": "variation-on", "value": "true"},
-        "timestamp": 1700000001000,
-        "sendToExperiment": true
+        "timestamp": 1700000001000
       }
     ]
   }

@@ -6,7 +6,7 @@ The SDK stores evaluated flag results for local reads. It does not need a local 
 
 ## Stored information
 
-Retain the flag key, selected string value, declared value type, server reason, version, and analytics metadata, including variation options and experiment eligibility when supplied. Distinguish remote results from application-supplied bootstrap values. Preserve server metadata without recalculating targeting or experiment membership.
+Retain the flag key, selected string value, declared value type, server reason, version, and analytics metadata, including variation options and `insightsEnabled` when supplied. Distinguish remote results from application-supplied bootstrap values. Preserve the metadata needed for evaluation and analytics without recalculating targeting or experiment membership.
 
 Flag keys are case-sensitive. Keep data and synchronization cursors scoped to both the environment and the complete user context, including attributes. An SDK may choose its own storage representation; disk formats and cache-key algorithms are not shared contracts.
 
