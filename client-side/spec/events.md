@@ -18,7 +18,7 @@ Events support usage analytics and experimentation. Collection must remain inexp
 
 Capture the user, attributes, value, and timestamp at the call. Later Identify calls, input mutation, and retries MUST NOT change that event.
 
-For evaluation events, use the server's selected variation metadata and `sendToExperiment` decision. Do not perform experiment sampling locally. If the selected variation cannot be mapped to valid analytics metadata, omit the event and report a diagnostic while preserving the evaluated value.
+For evaluation events, use the server's selected variation metadata. Do not perform experiment sampling locally. If the selected variation cannot be mapped to valid analytics metadata, omit the event and report a diagnostic while preserving the evaluated value.
 
 `insightsEnabled` controls whether this flag's evaluation events are sent and defaults to `true` when absent. When false, do not record evaluation events for this flag. This setting does not change the evaluation result or override SDK-wide event suppression.
 
@@ -32,7 +32,7 @@ The client-side event contract requires **deduplication within each flush group*
 
 - Events are duplicates when their complete logical payloads are equal except for timestamp. Compare user attributes by meaning, not object property order.
 - Keep the first occurrence and its original timestamp. Apply this to evaluation events and custom metric events separately.
-- Different users, attributes, flag variations, experiment eligibility, event names, or metric values are not duplicates.
+- Different users, attributes, flag variations, event names, or metric values are not duplicates.
 - Split into delivery batches after deduplication. Do not deduplicate across separate flush groups.
 
 For example, two identical Track calls in one flush group produce one metric payload; the same call in a later group produces another. **Track therefore does not guarantee one delivered event per invocation.** This behavior differs from the server-side event contract and must be documented for applications that count occurrences.

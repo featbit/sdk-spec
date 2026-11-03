@@ -79,12 +79,12 @@ Each logical JSON message MUST retain its WebSocket message boundary. Fragmented
 | Entity | Required fields and meaning |
 | --- | --- |
 | Common stored entity | `updatedAt` as an ISO-8601 timestamp, converted to signed 64-bit Unix milliseconds; `isArchived` as a deletion marker. |
-| Feature flag | `id`, `key`, `variationType`, `variations`, `targetUsers`, `rules`, `isEnabled`, `disabledVariationId`, `fallthrough`, `exptIncludeAllTargets`. |
+| Feature flag | `id`, `key`, `variationType`, `variations`, `targetUsers`, `rules`, `isEnabled`, `disabledVariationId`, `fallthrough`. |
 | Variation | `id`, `value`; the value is a string on the wire, including boolean, numeric, and JSON values. |
 | Individual target | `keyIds` list and `variationId`. |
-| Target rule | `name`, optional `dispatchKey`, `includedInExpt`, `conditions`, and rollout `variations`. |
-| Fallthrough | Optional `dispatchKey`, `includedInExpt`, and rollout `variations`. |
-| Rollout variation | `id`, two-element `rollout` interval, and `exptRollout`. |
+| Target rule | `name`, optional `dispatchKey`, `conditions`, and rollout `variations`. |
+| Fallthrough | Optional `dispatchKey` and rollout `variations`. |
+| Rollout variation | `id` and a two-element `rollout` interval. |
 | Condition | `property`, `op`, and string `value`. Lists are JSON arrays encoded inside that string. |
 | Segment | `id`, `included`, `excluded`, and `rules`; each segment rule contains `conditions`. |
 
@@ -122,8 +122,7 @@ An evaluation event has this structure:
       {
         "featureFlagKey": "checkout-v2",
         "variation": {"id": "variation-on", "value": "true"},
-        "timestamp": 1700000000000,
-        "sendToExperiment": true
+        "timestamp": 1700000000000
       }
     ]
   }
